@@ -1,14 +1,15 @@
-{-# LANGUAGE OverloadedRecordDot #-}
 {-# LANGUAGE OverloadedStrings #-}
 
 module Main where
 
 import Codeforces.API qualified as API
-import Codeforces.Types qualified
+import Configuration.Dotenv
 import Control.Applicative
 import Control.Monad.IO.Class
 import Data.Text
 import Data.Text qualified as Text
+import Human
+import System.Environment
 import Telegram.Bot.API
 import Telegram.Bot.Simple
 import Telegram.Bot.Simple.UpdateParser
@@ -50,11 +51,8 @@ todoBot3 =
       GetInfo handle ->
         model <# do
           usr <- liftIO $ API.userInfo handle
-          replyText $
-            "User with handle "
-              <> usr.handle
-              <> " has rating "
-              <> pack (show usr.rating)
+          let msg = toReplyMessage $ userToReadable usr
+          reply $ msg {replyMessageParseMode = Just HTML}
     startMessage =
       Text.unlines
         ["Hello! I am your Codeforces helper bot"]
@@ -66,6 +64,6 @@ run token = do
 
 main :: IO ()
 main = do
-  putStrLn "Please, enter Telegram bot's API token:"
-  token <- Token . Text.pack <$> getLine
+  loadFile defaultConfig
+  token <- Token . Text.pack <$> getEnv "TELEGRAM_BOT_TOKEN"
   run token

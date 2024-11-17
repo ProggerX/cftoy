@@ -19,6 +19,7 @@ executable cftoy
   other-modules:
     Codeforces.API
     Codeforces.Types
+    Human
 
   build-depends:
     , aeson
@@ -28,6 +29,7 @@ executable cftoy
     , telegram-bot-simple
     , text
     , wreq
+    , dotenv
 
   hs-source-dirs:   app
   default-language: GHC2021
