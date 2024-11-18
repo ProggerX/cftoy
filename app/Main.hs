@@ -19,7 +19,7 @@ type Handle = Text
 data Model = Model {}
 
 initialModel :: Model
-initialModel = Model {}
+initialModel = Model{}
 
 data Action
   = Start
@@ -29,33 +29,33 @@ data Action
 todoBot3 :: BotApp Model Action
 todoBot3 =
   BotApp
-    { botInitialModel = initialModel,
-      botAction = flip updateToAction,
-      botHandler = handleAction,
-      botJobs = []
+    { botInitialModel = initialModel
+    , botAction = flip updateToAction
+    , botHandler = handleAction
+    , botJobs = []
     }
-  where
-    updateToAction :: Model -> Update -> Maybe Action
-    updateToAction _ =
-      parseUpdate $
-        Start <$ command "start"
-          <|> GetInfo <$> command "info"
-          <|> callbackQueryDataRead
+ where
+  updateToAction :: Model -> Update -> Maybe Action
+  updateToAction _ =
+    parseUpdate $
+      Start <$ command "start"
+        <|> GetInfo <$> command "info"
+        <|> callbackQueryDataRead
 
-    handleAction :: Action -> Model -> Eff Action Model
-    handleAction action model = case action of
-      Start ->
-        model <# do
-          reply
-            (toReplyMessage startMessage)
-      GetInfo handle ->
-        model <# do
-          usr <- liftIO $ API.userInfo handle
-          let msg = toReplyMessage $ userToReadable usr
-          reply $ msg {replyMessageParseMode = Just HTML}
-    startMessage =
-      Text.unlines
-        ["Hello! I am your Codeforces helper bot"]
+  handleAction :: Action -> Model -> Eff Action Model
+  handleAction action model = case action of
+    Start ->
+      model <# do
+        reply
+          (toReplyMessage startMessage)
+    GetInfo handle ->
+      model <# do
+        usr <- liftIO $ API.userInfo handle
+        let msg = toReplyMessage $ userToReadable usr
+        reply $ msg{replyMessageParseMode = Just HTML}
+  startMessage =
+    Text.unlines
+      ["Hello! I am your Codeforces helper bot"]
 
 run :: Token -> IO ()
 run token = do

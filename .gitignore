@@ -1,4 +1,5 @@
 dist-newstyle/
 .direnv/
 .env
+result
 .stack-work/
