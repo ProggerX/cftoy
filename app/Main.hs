@@ -6,15 +6,14 @@ import Codeforces.API qualified as API
 import Configuration.Dotenv
 import Control.Applicative
 import Control.Monad.IO.Class
-import Data.Text
-import Data.Text qualified as Text
+import Data.Text qualified as T
 import Human
 import System.Environment
 import Telegram.Bot.API
 import Telegram.Bot.Simple
 import Telegram.Bot.Simple.UpdateParser
 
-type Handle = Text
+type Handle = T.Text
 
 data Model = Model {}
 
@@ -54,7 +53,7 @@ todoBot3 =
         let msg = toReplyMessage $ userToReadable usr
         reply $ msg{replyMessageParseMode = Just HTML}
   startMessage =
-    Text.unlines
+    T.unlines
       ["Hello! I am your Codeforces helper bot"]
 
 run :: Token -> IO ()
@@ -65,5 +64,5 @@ run token = do
 main :: IO ()
 main = do
   loadFile defaultConfig
-  token <- Token . Text.pack <$> getEnv "TELEGRAM_BOT_TOKEN"
+  token <- Token . T.pack <$> getEnv "TELEGRAM_BOT_TOKEN"
   run token
